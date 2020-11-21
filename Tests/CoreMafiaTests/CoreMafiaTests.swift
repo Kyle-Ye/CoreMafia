@@ -3,10 +3,10 @@ import XCTest
 
 final class CoreMafiaTests: XCTestCase {
     func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(CoreMafia().text, "Hello, World!")
+        let game = WerewolfGame.init(15, 5, 1, 1)
+        game.play()
+        print(game.resultString)
+        XCTAssertTrue([1,-1].contains(game.result))
     }
 
     static var allTests = [
