@@ -10,54 +10,87 @@ import Foundation
 class Game {
     // MARK: - Init
 
-    private var characters: [GameCharacter] = []
-    private var citizens: [Citizen] = []
-    private var seer: Seer?
-    private func addCharacter(_ character: GameCharacter) {
-        characters.append(character)
+    private var players: [Player] = []
+    var seerIndex: Int?
+    var witchIndex: Int?
+    var saviorIndex: Int?
+    var activePlayerIndexes: [Int] {
+        players.indices.filter { index -> Bool in
+            players[index].isActive
+        }
     }
 
-    func addSeer() {
-        let seer = Seer(self)
-        citizens.append(seer)
-        addCharacter(seer)
-        self.seer = seer
+    var claimedSpecialPlayerIndexes: [Int] {
+        players.indices.filter { index -> Bool in
+            if players[index].role is SpecialRole {
+                return players[index].claimed
+            }
+            return false
+        }.sorted { (index1, index2) -> Bool in
+            let role1 = players[index1].role as! SpecialRole
+            let role2 = players[index2].role as! SpecialRole
+            return role1.priority < role2.priority
+        }
     }
 
-    func addSavior() {
-        let savior = Savior(self)
-        citizens.append(savior)
-        addCharacter(savior)
-        remainMaxSavior += 1
+    // FIXME: Bug about seerIndex
+    var detectedWolfIndexes: [Int] {
+        // If this game has a seer
+        if let seerIndex = seerIndex {
+            return players.indices.filter { index -> Bool in
+                let s = players[seerIndex]
+                let p = players[index]
+                // only when seer is (active and claimed) or dead will wolf be exposed
+                return (p.isActive && p.detected && p is Wolf) && ((s.isActive && s.claimed) || s.isDead)
+            }
+        }
+        return []
     }
 
-    func addVillager() {
-        let villager = Villager(self)
-        citizens.append(villager)
-        addCharacter(villager)
+    var detectedCitizenIndexes: [Int] {
+        // If this game has a seer
+        if seerIndex != nil {
+            return players.indices.filter { index -> Bool in
+                let p = players[index]
+                return p.isActive && p.detected && p is Citizen
+            }
+        }
+        return []
     }
 
-    func addWerewolf() {
-        addCharacter(Werewolf(self))
+    func addPlayer(with role: Role) {
+        switch role {
+        case is Seer:
+            seerIndex = players.count
+        case is Witch:
+            witchIndex = players.count
+        default:
+            break
+        }
+        players.append(Player(role: role, position: players.count))
     }
 
     // MARK: - Count API
 
-    var currentCharactersNumber: Int {
-        characters.count
+    var activePlayerNumber: Int {
+        activePlayerIndexes.count
     }
 
-    var currentCitizensNumber: Int {
-        citizens.count
+    var activeCitizenNumber: Int {
+        activePlayerIndexes.filter { i -> Bool in
+            players[i].role is Citizen
+        }.count
     }
 
-    var currentWerewolvesNumber: Int {
-        currentCharactersNumber - currentCitizensNumber
+    var activeWolfNumber: Int {
+        activePlayerIndexes.filter { i -> Bool in
+            players[i].role is Werewolf
+        }.count
     }
 
     // MARK: - Timeline and Event
 
-    let time = TimeLine()
+    private let time = TimeLine()
     private var revote = false
 
     func play() {
@@ -74,21 +107,23 @@ class Game {
             } while revote
             time.next()
         }
-        if currentCitizensNumber == 0 {
+        if activePlayerNumber == 0 {
             result = -1
-        } else if currentWerewolvesNumber == 0 {
+        } else if activeWolfNumber == 0 {
             result = 1
         }
     }
 
     private(set) var result = 0
     private var gameOver: Bool {
-        (currentCitizensNumber == 0) || (currentWerewolvesNumber == 0)
+        (activePlayerNumber == 0) || (activeWolfNumber == 0)
     }
 
     private func dayEvent() {
-        for character in characters {
-            character.vote()
+        for player in players {
+            if player.isActive {
+                player.role.vote()
+            }
         }
         lynchEvent()
     }
@@ -99,130 +134,127 @@ class Game {
      - Wolves kills a citizen
      */
     private func nightEvent() {
-        for character in characters {
-            if let seer = character as? Seer {
-                seer.detect()
-            }
-            if let savior = character as? Savior {
-                savior.protect()
-            }
-            if let werewolf = character as? Werewolf {
-                werewolf.killVote()
+        for player in players {
+            if player.isActive {
+                let role = player.role
+                switch role {
+                case let seer as Seer:
+                    seer.detect()
+                case let savior as Savior:
+                    savior.protect()
+                case let werewolf as Werewolf:
+                    werewolf.killVote()
+                default:
+                    break
+                }
             }
         }
         killEvent()
     }
 
     private func lynchEvent() {
-        var lynchIndex = characters.isEmpty ? -1 : 0
-        for index in characters.indices {
-            let current = characters[index]
-            let lynch = characters[lynchIndex]
-            if current.votes > lynch.votes {
-                lynchIndex = index
-            }
-        }
-        if lynchIndex != -1 {
-            logger.info("Character \(lynchIndex) will be lynched")
-            switch characters[lynchIndex] {
-            case is Seer:
-                (characters[lynchIndex] as! Seer).show()
-                revote = true
-                logger.info("Seer claims Seer, Revote.")
-            case is Savior:
-                (characters[lynchIndex] as! Savior).show()
-                revote = true
-                logger.info("Savior claims Savior, Revote.")
-            case is Villager:
-                if (characters[lynchIndex] as! Villager).detected {
-                    if !(shownSpecials.first?.priority ?? 0 == 2) {
-                        seer?.show()
-                    }
-                    revote = true
-                    logger.info("Seer claims Villager, Revote.")
-                } else {
-                    citizens.remove(at: lynchIndex)
-                    characters.remove(at: lynchIndex)
+        if let lynchedPlayer = players.max(by: { (p1, p2) -> Bool in
+            p1.lynchVotes < p2.lynchVotes
+        }) {
+            let lynchIndex = lynchedPlayer.position
+            logger.info("Player \(lynchIndex) will be lynched")
+            if lynchedPlayer.claimed {
+                let result = players[lynchIndex].getLynched()
+                if result {
                     revote = false
-                    logger.info("Citizen \(lynchIndex) is lynched")
+                    logger.info("Player \(lynchIndex) is lynched")
+                } else {
+                    revote = true
+                    logger.info("Unknown situation")
                 }
-            case is Werewolf:
-                characters.remove(at: lynchIndex)
-                revote = false
-                logger.info("Werewolf \(lynchIndex - self.currentCitizensNumber) is lynched")
-            default:
-                logger.error("Unknown situation")
+            } else {
+                switch players[lynchIndex].role {
+                case let seer as Seer:
+                    seer.show()
+                    revote = true
+                    logger.info("Player \(lynchIndex) claims Seer, Revote.")
+                case let witch as Witch:
+                    witch.show()
+                    revote = true
+                    logger.info("Player \(lynchIndex) claims Witch, Revote.")
+                case let savior as Savior:
+                    savior.show()
+                    revote = true
+                    logger.info("Player \(lynchIndex) claims Savior, Revote.")
+                case is Citizen:
+                    if let seerIndex = seerIndex, detectedCitizenIndexes.contains(lynchIndex) {
+                        lynchedPlayer.claimed = true
+                        (players[seerIndex].role as! Seer).show()
+                        revote = true
+                        logger.info("Seer claims Citizen, Revote.")
+                    } else {
+                        fallthrough
+                    }
+                case is Wolf:
+                    let result = players[lynchIndex].getLynched()
+                    if result {
+                        revote = false
+                        logger.info("Player \(lynchIndex) is lynched")
+                    } else {
+                        revote = true
+                        logger.info("Unknown situation")
+                    }
+                default:
+                    logger.error("Unknown situation")
+                }
             }
         }
         resetState()
     }
 
     private func killEvent() {
-        var killIndex = citizens.isEmpty ? -1 : 0
-        for index in citizens.indices {
-            let current = citizens[index]
-            let kill = citizens[killIndex]
-            if current.killVotes > kill.killVotes {
-                killIndex = index
+        if let killedPlayer = players.max(by: { (p1, p2) -> Bool in
+            p1.killVotes < p2.killVotes
+        }) {
+            let killIndex = killedPlayer.position
+            let result = players[killIndex].getKilled()
+            if result {
+//                if killedPlayer is Savior {
+//                    remainMaxSavior -= 1
+//                }
+                logger.info("Player \(killIndex) is killed")
+            } else {
+                logger.info("Peaceful night, no one gets killed")
             }
-        }
-        if killIndex != -1 && !citizens[killIndex].protected {
-            if citizens[killIndex] is Seer {
-                seer = nil
-            }
-            if citizens[killIndex] is Savior && shownSaviorIndex != nil {
-                remainMaxSavior -= 1
-            }
-            citizens.remove(at: killIndex)
-            characters.remove(at: killIndex)
-            logger.info("Citizen \(killIndex) get killed")
         }
         resetState()
     }
 
     private func resetState() {
-        for character in characters {
-            character.reset()
+        for player in players {
+            player.reset()
         }
     }
 
     // MARK: - Middle layer
 
-    func characterGetProtected(_ index: Int) {
-        characters[index].getProtected()
+    func playerGetProtected(_ index: Int) {
+        players[index].protected = true
     }
 
-    func citizenGetKillVoted(_ index: Int) {
-        citizens[index].getKillVoted()
+    func playerGetKillVoted(_ index: Int) {
+        players[index].killVotes += 1
     }
 
-    func characterGetVoted(_ index: Int) {
-        characters[index].getVoted()
+    func playerGetLynchVoted(_ index: Int) {
+        players[index].lynchVotes += 1
     }
 
-    func getCharacterID(_ index: Int) -> UUID {
-        characters[index].id
+    func getPlayerID(_ index: Int) -> UUID {
+        players[index].id
     }
 
-    var voteWolfIndex: Int?
-
-    func characterGetDetected(_ index: Int) {
-        let character = characters[index]
-        switch character {
-        case is Citizen:
-            (character as! Citizen).detected = true
-        case is Werewolf:
-            voteWolfIndex = index - currentCitizensNumber
-        default:
-            logger.error("Unknown situation")
-        }
+    func playerGetDetected(_ index: Int) {
+        players[index].detected = true
     }
 
     // MARK: - SC API
 
-    var shownSpecials: [SpecialCharacter] = []
-    var shownSeerIndex: Int?
-    var shownSaviorIndex: Int?
     /**
      开局有多少个守卫初值即为几，只有当跳出来的守卫被狼杀才减1
      */

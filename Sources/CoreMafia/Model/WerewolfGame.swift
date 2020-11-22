@@ -19,12 +19,12 @@ public class WerewolfGame {
 
          - Returns: A mafia game
      */
-    convenience init(_ N: Int, _ m: Int, _ s: Int, _ d: Int) {
+    public convenience init(_ N: Int, _ m: Int, _ s: Int, _ d: Int) {
         precondition(N >= m + s + d, "The total number of players must great or equal to the mafias and the special citizens")
         self.init(m: m, s: s, d: d, o: N - m - s - d)
     }
 
-    func play() {
+    public func play() {
         game.play()
     }
 
@@ -34,7 +34,7 @@ public class WerewolfGame {
      -1 means werewolf wins
      */
 
-    var result: Int {
+    public var result: Int {
         game.result
     }
 
@@ -60,18 +60,22 @@ public class WerewolfGame {
          - Returns: A mafia game
      */
     private init(m: Int, s: Int, d: Int, o: Int) {
+        var roles: [Role] = []
+        for _ in 0 ..< m {
+            roles.append(Werewolf(game))
+        }
         for _ in 0 ..< s {
-            game.addSeer()
+            roles.append(Seer(game))
         }
         for _ in 0 ..< d {
-            game.addSavior()
+            roles.append(Savior(game))
         }
         for _ in 0 ..< o {
-            game.addVillager()
+            roles.append(Villager(game))
         }
-        // Remember to addWerewolf last!
-        for _ in 0 ..< m {
-            game.addWerewolf()
+        roles.shuffle()
+        for role in roles {
+            game.addPlayer(with: role)
         }
     }
 
