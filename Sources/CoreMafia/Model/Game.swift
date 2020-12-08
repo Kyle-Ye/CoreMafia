@@ -8,9 +8,11 @@
 import Foundation
 
 class Game {
+    @Published var logger = LogHistory()
+    
     // MARK: - Init
 
-    private var players: [Player] = []
+    private(set) var players: [Player] = []
     var seerIndex: Int?
     var witchIndex: Int?
     var saviorIndex: Int?
@@ -90,32 +92,35 @@ class Game {
 
     // MARK: - Timeline and Event
 
-    private let time = TimeLine()
+    @Published var time = TimeLine()
     private var revote = false
 
     func play() {
-        while !gameOver {
-            nightEvent()
+        if !gameOver {
             time.next()
-
-            if gameOver {
-                break
+            logger.next()
+            switch time.time {
+            case .day:
+                repeat {
+                    resetState()
+                    dayEvent()
+                } while revote
+            case .night:
+                resetState()
+                nightEvent()
             }
-
-            repeat {
-                dayEvent()
-            } while revote
-            time.next()
         }
-        if activePlayerNumber == 0 {
-            result = -1
-        } else if activeWolfNumber == 0 {
-            result = 1
+        if gameOver {
+            if activePlayerNumber == 0 {
+                result = -1
+            } else if activeWolfNumber == 0 {
+                result = 1
+            }
         }
     }
 
-    private(set) var result = 0
-    private var gameOver: Bool {
+    @Published private(set) var result = 0
+    var gameOver: Bool {
         (activePlayerNumber == 0) || (activeWolfNumber == 0)
     }
 
@@ -204,7 +209,6 @@ class Game {
                 }
             }
         }
-        resetState()
     }
 
     private func killEvent() {
@@ -222,7 +226,6 @@ class Game {
                 logger.info("Peaceful night, no one gets killed")
             }
         }
-        resetState()
     }
 
     private func resetState() {
@@ -260,3 +263,5 @@ class Game {
      */
     var remainMaxSavior = 0
 }
+
+extension Game:ObservableObject{}

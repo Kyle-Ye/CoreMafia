@@ -7,15 +7,15 @@
 
 import Foundation
 
-class TimeLine {
-    enum Time {
+public struct TimeLine {
+    public enum Time:String {
         case day, night
     }
 
-    private(set) var time = Time.night
-    private(set) var round = 1
+    public private(set) var time = Time.day
+    public private(set) var round = 1
 
-    func next() {
+    mutating func next() {
         switch time {
         case .day:
             time = .night

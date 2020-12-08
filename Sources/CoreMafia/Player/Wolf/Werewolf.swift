@@ -51,8 +51,10 @@ class Werewolf: Role, Wolf {
     }
 
     private func randomCitizenKillVote() {
+        
     }
 
     private func knownSpecialKillVote() {
+        
     }
 }

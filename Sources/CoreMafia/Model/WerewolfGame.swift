@@ -5,9 +5,12 @@
 //  Created by 叶絮雷 on 2020/9/29.
 //
 
+import Combine
 import Foundation
 
 public class WerewolfGame {
+    // MARK: - Public Init Method
+
     /**
          Initializes a mafia game with the specific number of characters.
 
@@ -24,21 +27,53 @@ public class WerewolfGame {
         self.init(m: m, s: s, d: d, o: N - m - s - d)
     }
 
+    // MARK: - Combine SetUp
+
+    var anyCancellable: AnyCancellable?
+
+    @Published private var game = Game()
+
+    // MARK: - Game Play API
+
+    public func autoplay() {
+        while !game.gameOver {
+            game.play()
+        }
+    }
+
     public func play() {
         game.play()
     }
 
+    public func replay() {
+        game = Game()
+        initGame()
+    }
+
+    // MARK: - Game State
+
+    public var time: TimeLine {
+        game.time
+    }
+
+    public var players: [Player] {
+        game.players
+    }
+
+    public var logger:LogHistory{
+        game.logger
+    }
+    
     /**
      0 means no result
      1 means citizen wins
      -1 means werewolf wins
      */
-
     public var result: Int {
-        game.result
+        return game.result
     }
 
-    var resultString: String {
+    public var resultString: String {
         if game.result == 1 {
             return "Citizen Group wins"
         } else if game.result == -1 {
@@ -47,6 +82,8 @@ public class WerewolfGame {
             return "Unknown result"
         }
     }
+
+    // MARK: - Private Property and Method
 
     /**
          Initializes a mafia game with the specific number of characters.
@@ -60,24 +97,41 @@ public class WerewolfGame {
          - Returns: A mafia game
      */
     private init(m: Int, s: Int, d: Int, o: Int) {
+        werewolfNumber = m
+        seerNumber = s
+        saviorNumber = d
+        villagerNumber = o
+        initGame()
+    }
+
+    private func initGame() {
         var roles: [Role] = []
-        for _ in 0 ..< m {
+        for _ in 0 ..< werewolfNumber {
             roles.append(Werewolf(game))
         }
-        for _ in 0 ..< s {
+        for _ in 0 ..< seerNumber {
             roles.append(Seer(game))
         }
-        for _ in 0 ..< d {
+        for _ in 0 ..< saviorNumber {
             roles.append(Savior(game))
         }
-        for _ in 0 ..< o {
+        for _ in 0 ..< villagerNumber {
             roles.append(Villager(game))
         }
         roles.shuffle()
         for role in roles {
             game.addPlayer(with: role)
         }
+        anyCancellable = game.objectWillChange.sink { [weak self] _ in
+           self?.objectWillChange.send()
+       }
     }
 
-    private var game = Game()
+    private var werewolfNumber = 0
+    private var seerNumber = 0
+    private var saviorNumber = 0
+    private var villagerNumber = 0
+}
+
+extension WerewolfGame: ObservableObject {
 }

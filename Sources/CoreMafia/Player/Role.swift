@@ -6,12 +6,14 @@
 //
 
 import Foundation
-import os
-let logger = Logger()
-class Role {
+
+public class Role {
     let type = AIType.strong
     unowned let game: Game
     unowned var player: Player?
+    public var rawString:String {
+        String(String(describing: self).split(separator: ".")[1])
+    }
     init(_ game: Game) {
         self.game = game
     }
@@ -34,5 +36,8 @@ class Role {
             game.playerGetLynchVoted(index)
             logger.info("Player \(index) get voted by Player \(self.player!.position)")
         }
+    }
+    var logger:LogHistory{
+        game.logger
     }
 }

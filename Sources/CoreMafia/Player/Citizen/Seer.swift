@@ -12,6 +12,7 @@ class Seer: Villager, SpecialRole {
     let priority = 3
 
     func detect() {
+        // FIXME: No seen by citizen vision
         var index = game.activePlayerIndexes.randomElement()!
         while index == game.seerIndex!{
             index = game.activePlayerIndexes.randomElement()!

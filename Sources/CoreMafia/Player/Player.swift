@@ -7,13 +7,13 @@
 
 import Foundation
 
-class Player {
-    let id = UUID()
-    let role: Role
-    let position: Int
+public class Player {
+    public let id = UUID()
+    public let role: Role
+    public let position: Int
     private var active = true
-    var isDead: Bool { !active }
-    var isActive: Bool { active }
+    public var isDead: Bool { !active }
+    public var isActive: Bool { active }
     init(role: Role, position: Int) {
         self.role = role
         self.position = position
@@ -22,9 +22,9 @@ class Player {
 
     // MARK: Votes
 
-    var protected = false
-    var lynchVotes = 0
-    var killVotes = 0
+    @Published public var protected = false
+    @Published public var lynchVotes = 0
+    @Published public var killVotes = 0
 
     func reset() {
         protected = false
@@ -58,3 +58,10 @@ class Player {
         }
     }
 }
+
+public extension Player{
+    static var testPlayer = Player(role: Seer(Game()), position: 0)
+}
+
+extension Player:Identifiable{}
+extension Player:ObservableObject{}

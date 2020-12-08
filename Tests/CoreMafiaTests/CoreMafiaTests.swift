@@ -4,7 +4,7 @@ import XCTest
 final class CoreMafiaTests: XCTestCase {
     func testExample() {
         let game = WerewolfGame.init(15, 5, 1, 1)
-        game.play()
+        game.autoplay()
         print(game.resultString)
         XCTAssertTrue([1,-1].contains(game.result))
     }
