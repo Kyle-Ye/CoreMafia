@@ -8,13 +8,13 @@
 import Foundation
 
 protocol SpecialRole {
-    var priority: Int { get }
+    var protectPriority: Int { get }
+    var killPriority: Int { get }
     func show()
 }
 
 extension SpecialRole where Self: Role {
     func show() {
-        player!.claimed = true
-        player!.detected = true
+        player?.claimed = true
     }
 }

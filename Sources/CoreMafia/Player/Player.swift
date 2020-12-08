@@ -8,6 +8,7 @@
 import Foundation
 
 public class Player {
+    // TODO: - remove id?
     public let id = UUID()
     public let role: Role
     public let position: Int
@@ -32,8 +33,12 @@ public class Player {
         killVotes = 0
     }
 
+    // MARK: State (White&Black List)
+
     var detected = false
     var claimed = false
+    var trustedBySavior = false
+    var trustedByWitch = false
 
     /**
          The player get lynched and return the result
@@ -41,9 +46,16 @@ public class Player {
          - Returns: Lynch is successful or not
      */
     func getLynched() -> Bool {
-        active = false
-        return true
+        switch role {
+        case let idiot as Idiot:
+            idiot.lynched = true
+            return false
+        default:
+            active = false
+            return true
+        }
     }
+
     /**
          The player get killed and return the result
 
@@ -59,9 +71,9 @@ public class Player {
     }
 }
 
-public extension Player{
+public extension Player {
     static var testPlayer = Player(role: Seer(Game()), position: 0)
 }
 
-extension Player:Identifiable{}
-extension Player:ObservableObject{}
+extension Player: Identifiable {}
+extension Player: ObservableObject {}
