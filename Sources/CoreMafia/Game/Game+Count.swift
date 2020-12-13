@@ -25,6 +25,6 @@ extension Game {
     }
 
     var gameOver: Bool {
-        (activeNumber == 0) || (activeWolfNumber == 0)
+        (activeCitizenNumber == 0) || (activeWolfNumber == 0)
     }
 }

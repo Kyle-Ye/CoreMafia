@@ -18,6 +18,10 @@ public class LogHistory {
         histories[count - 1].append(message)
     }
 
+    func warning(_ message: String) {
+        histories[count - 1].append("WARNING: \(message)")
+    }
+
     func error(_ message: String) {
         histories[count - 1].append("ERROR: \(message)")
     }

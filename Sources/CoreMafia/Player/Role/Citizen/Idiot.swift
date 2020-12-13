@@ -11,10 +11,10 @@ class Idiot: Villager {
     var lynched: Bool = false
 
     override func lynchVote() {
-        if !lynched{
+        if !lynched {
             super.lynchVote()
-        }else{
-            logger.info("Player \(index) is a lynched idiot, can't lynchVote")
+        } else {
+            logger.info("\(player!) is a lynched idiot, can't lynch vote")
         }
     }
 }

@@ -10,7 +10,7 @@ import Foundation
 class Seer: Villager {
     // MARK: - Day Event
 
-    override func getLynchVoteIndex() -> Int {
+    override func getLynchVoteIndex() -> Int? {
         if let wolfIndex = game.blackList.first {
             return wolfIndex
         } else {
@@ -18,7 +18,7 @@ class Seer: Villager {
                 .subtracting(game.whiteList)
                 .subtracting(game.seerWhiteList)
                 .subtracting([player.position])
-                .randomElement()!
+                .randomElement()
             return index
         }
     }
@@ -26,14 +26,17 @@ class Seer: Villager {
     // MARK: - Night Event
 
     func detect() {
+        let index = getDetectIndex()
+        game.playerGetDetected(index, from: player.position)
+    }
+
+    private func getDetectIndex() -> Int? {
         if let index = game.unknownList.randomElement() {
-            game.playerGetDetected(index)
-            logger.info("Player \(index) get detected")
+            return index
         } else if let index = game.undetectedList.randomElement() {
-            game.playerGetDetected(index)
-            logger.info("Player \(index) get detected")
+            return index
         } else {
-            logger.info("No one get detected")
+            return nil
         }
     }
 }
@@ -42,7 +45,8 @@ extension Seer: SpecialRole {
     var protectPriority: Int {
         5
     }
-    var killPriority: Int{
+
+    var killPriority: Int {
         4
     }
 }

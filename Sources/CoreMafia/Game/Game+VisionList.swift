@@ -13,7 +13,7 @@ extension Game {
     public var whiteList: Set<Int> {
         let claimed = Set(activeIndexes.filter { index -> Bool in
             let player = players[index]
-            return player.claimed
+            return player.claimed && player.role is Citizen
         })
         var seer: Set<Int> = []
         if let seerIndex = seerIndex, players[seerIndex].claimed {
@@ -47,7 +47,7 @@ extension Game {
     }
 
     public var claimedSpecialList: Set<Int> {
-        Set(players.indices.filter { index -> Bool in
+        Set(activeIndexes.filter { index -> Bool in
             if players[index].role is SpecialRole {
                 return players[index].claimed
             }

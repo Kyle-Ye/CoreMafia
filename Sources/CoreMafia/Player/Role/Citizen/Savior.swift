@@ -9,7 +9,7 @@ import Foundation
 class Savior: Villager {
     // MARK: - Day Event
 
-    override func getLynchVoteIndex() -> Int {
+    override func getLynchVoteIndex() -> Int? {
         if let wolfIndex = game.blackList.first {
             return wolfIndex
         } else {
@@ -17,7 +17,7 @@ class Savior: Villager {
                 .subtracting(game.whiteList)
                 .subtracting(game.saviorWhiteList)
                 .subtracting([player.position])
-                .randomElement()!
+                .randomElement()
             return index
         }
     }
@@ -25,13 +25,9 @@ class Savior: Villager {
     // MARK: - Night Event
 
     func protect() {
-        if let index = getProtectIndex() {
-            lastProtectedIndex = index
-            game.playerGetProtected(index)
-            logger.info("Player \(index) get protected")
-        } else {
-            logger.info("No one get protected")
-        }
+        let index = getProtectIndex()
+        lastProtectedIndex = index
+        game.playerGetProtected(index, from: player.position)
     }
 
     private var lastProtectedIndex: Int?
@@ -39,28 +35,28 @@ class Savior: Villager {
     func getProtectIndex() -> Int? {
         if lastProtectedIndex != player.position {
             return player.position
-        } else if game.claimedSpecialList.count == 1 && game.claimedSpecialProtectIndexes.first != player.position {
-            let index = game.claimedSpecialProtectIndexes.first!
-            return index
-        } else if game.claimedSpecialList.count > 1 {
-            let index = game.claimedSpecialProtectIndexes.first!
-            if index != player.position {
+        } else {
+            let claimedSpecialList = game.claimedSpecialList.subtracting([player.position])
+            let claimedSpecialIndexes = claimedSpecialList.sorted { (index1, index2) -> Bool in
+                let role1 = game.players[index1].role as! SpecialRole
+                let role2 = game.players[index2].role as! SpecialRole
+                return role1.protectPriority < role2.protectPriority
+            }
+            if let index = claimedSpecialIndexes.first {
+                return index
+            } else if let index = game.whiteList
+                .union(game.saviorWhiteList)
+                .subtracting([player.position])
+                .randomElement() {
+                return index
+            } else if let index = game.activeList
+                .subtracting(game.blackList)
+                .subtracting([player.position])
+                .randomElement() {
                 return index
             } else {
-                return game.claimedSpecialProtectIndexes[1]
+                return nil
             }
-        } else if let index = game.whiteList
-            .union(game.saviorWhiteList)
-            .subtracting([player.position])
-            .randomElement() {
-            return index
-        } else if let index = game.activeList
-            .subtracting(game.blackList)
-            .subtracting([player.position])
-            .randomElement() {
-            return index
-        } else {
-            return nil
         }
     }
 }
@@ -69,7 +65,8 @@ extension Savior: SpecialRole {
     var protectPriority: Int {
         4
     }
-    var killPriority: Int{
+
+    var killPriority: Int {
         5
     }
 }

@@ -24,6 +24,7 @@ public class Player {
     // MARK: Votes
 
     @Published public var protected = false
+    @Published public var cursed = false
     @Published public var lynchVotes = 0
     @Published public var killVotes = 0
 
@@ -31,43 +32,49 @@ public class Player {
         protected = false
         lynchVotes = 0
         killVotes = 0
+        if role.game.time.time == .night {
+            cursed = false
+        }
     }
 
-    // MARK: State (White&Black List)
+    // MARK: State
 
-    var detected = false
-    var claimed = false
-    var trustedBySavior = false
-    var trustedByWitch = false
+    @Published public var detected = false
+    @Published public var claimed = false
+    @Published public var trustedBySavior = false
+    @Published public var trustedByWitch = false
 
-    /**
-         The player get lynched and return the result
-
-         - Returns: Lynch is successful or not
-     */
     func getLynched() -> Bool {
         switch role {
         case let idiot as Idiot:
             idiot.lynched = true
-            return false
+            claimed = true
+        case let hunter as Hunter:
+            active = false
+            hunter.shoot()
         default:
             active = false
-            return true
         }
+        return true
     }
 
-    /**
-         The player get killed and return the result
-
-         - Returns: Kill event is successful or not
-     */
     func getKilled() -> Bool {
         if protected {
             return false
         } else {
             active = false
+            switch role {
+            case let hunter as Hunter:
+                hunter.shoot()
+            default:
+                break
+            }
             return true
         }
+    }
+
+    func getShot() {
+        active = false
     }
 }
 
@@ -77,3 +84,15 @@ public extension Player {
 
 extension Player: Identifiable {}
 extension Player: ObservableObject {}
+
+extension Player {
+    var validLynchVotes: Int {
+        lynchVotes + (cursed ? 1 : 0)
+    }
+}
+
+extension Player: CustomStringConvertible {
+    public var description: String {
+        "Player\(position)(\(role))"
+    }
+}

@@ -22,10 +22,10 @@ public class WerewolfGame {
 
          - Returns: A mafia game
      */
-    public convenience init(_ N: Int, _ m: Int, _ s: Int, _ d: Int) {
-        precondition(N >= m + s + d, "The total number of players must great or equal to the mafias and the special citizens")
-        self.init(m: m, s: s, d: d, o: N - m - s - d)
-    }
+//    public convenience init(_ N: Int, _ m: Int, _ s: Int, _ d: Int) {
+//        precondition(N >= m + s + d, "The total number of players must great or equal to the mafias and the special citizens")
+//        self.init(m: m, s: s, d: d, o: N - m - s - d)
+//    }
 
     // MARK: - Combine SetUp
 
@@ -60,10 +60,10 @@ public class WerewolfGame {
         game.players
     }
 
-    public var logger:LogHistory{
+    public var logger: LogHistory {
         game.logger
     }
-    
+
     /**
      0 means no result
      1 means citizen wins
@@ -85,22 +85,26 @@ public class WerewolfGame {
 
     // MARK: - Private Property and Method
 
-    /**
-         Initializes a mafia game with the specific number of characters.
+    private var werewolfNumber = 0
+    private var villagerNumber = 0
+    private var seerNumber = 0
+    private var witchNumber = 0
+    private var saviorNumber = 0
+    private var hunterNumber = 0
+    private var crowNumber = 0
+    private var idiotNumber = 0
 
-         - Parameters:
-             - m: The number of mafias
-             - s: The number of seers
-             - d: The number of saviors
-             - o: The number of ordinary citizens
-
-         - Returns: A mafia game
-     */
-    private init(m: Int, s: Int, d: Int, o: Int) {
-        werewolfNumber = m
-        seerNumber = s
-        saviorNumber = d
-        villagerNumber = o
+    public init(werewolf: Int, villager: Int, seer: Int = 1,
+                 witch: Int = 0, savior: Int = 0, hunter: Int = 0,
+                 crow: Int = 0, idiot: Int = 0) {
+        werewolfNumber = werewolf
+        villagerNumber = villager
+        seerNumber = seer
+        witchNumber = witch
+        saviorNumber = savior
+        hunterNumber = hunter
+        crowNumber = crow
+        idiotNumber = idiot
         initGame()
     }
 
@@ -109,28 +113,35 @@ public class WerewolfGame {
         for _ in 0 ..< werewolfNumber {
             roles.append(Werewolf(game))
         }
+        for _ in 0 ..< villagerNumber {
+            roles.append(Villager(game))
+        }
         for _ in 0 ..< seerNumber {
             roles.append(Seer(game))
+        }
+        for _ in 0 ..< witchNumber {
+            roles.append(Witch(game))
         }
         for _ in 0 ..< saviorNumber {
             roles.append(Savior(game))
         }
-        for _ in 0 ..< villagerNumber {
-            roles.append(Villager(game))
+        for _ in 0 ..< hunterNumber {
+            roles.append(Hunter(game))
+        }
+        for _ in 0 ..< crowNumber {
+            roles.append(Crow(game))
+        }
+        for _ in 0 ..< idiotNumber {
+            roles.append(Idiot(game))
         }
         roles.shuffle()
         for role in roles {
             game.addPlayer(with: role)
         }
         anyCancellable = game.objectWillChange.sink { [weak self] _ in
-           self?.objectWillChange.send()
-       }
+            self?.objectWillChange.send()
+        }
     }
-
-    private var werewolfNumber = 0
-    private var seerNumber = 0
-    private var saviorNumber = 0
-    private var villagerNumber = 0
 }
 
 extension WerewolfGame: ObservableObject {

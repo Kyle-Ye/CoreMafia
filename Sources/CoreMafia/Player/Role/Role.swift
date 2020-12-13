@@ -20,11 +20,10 @@ public class Role {
 
     func lynchVote() {
         let index = getLynchVoteIndex()
-        game.playerGetLynchVoted(index)
-        logger.info("Player \(index) get voted by Player \(player.position)")
+        game.playerGetLynchVoted(index, from: player.position)
     }
 
-    func getLynchVoteIndex() -> Int {
+    func getLynchVoteIndex() -> Int? {
         getRandomLynchVoteOthersIndex()
     }
 }
@@ -33,21 +32,21 @@ public class Role {
 
 extension Role: CustomStringConvertible {
     public var description: String {
-        String(String(describing: self).split(separator: ".")[1])
+        String(describing: Swift.type(of: self))
     }
 }
 
 // MARK: - Helper Function
 
 extension Role {
-    private func getRandomLynchVoteIndex() -> Int {
-        game.activeIndexes.randomElement()!
+    private func getRandomLynchVoteIndex() -> Int? {
+        game.activeIndexes.randomElement()
     }
 
-    private func getRandomLynchVoteOthersIndex() -> Int {
+    private func getRandomLynchVoteOthersIndex() -> Int? {
         let index = game.activeList
             .subtracting([player.position])
-            .randomElement()!
+            .randomElement()
         return index
     }
 

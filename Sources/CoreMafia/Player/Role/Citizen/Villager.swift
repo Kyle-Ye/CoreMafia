@@ -10,15 +10,18 @@ import Foundation
 class Villager: Role {
     // MARK: - Day Event
 
-    override func getLynchVoteIndex() -> Int {
+    override func getLynchVoteIndex() -> Int? {
         if let wolfIndex = game.blackList.first {
             return wolfIndex
-        } else {
-            let index = game.activeList
-                .subtracting(game.whiteList)
-                .subtracting([player.position])
-                .randomElement()!
+        } else if let index = game.activeList
+            .subtracting(game.whiteList)
+            .subtracting([player.position])
+            .randomElement() {
             return index
+        } else {
+            return game.activeList
+                .subtracting([player.position])
+                .randomElement()
         }
     }
 

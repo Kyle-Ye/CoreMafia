@@ -10,16 +10,19 @@ import Foundation
 class Werewolf: Role, Wolf {
     // MARK: - Day Event
 
-    override func getLynchVoteIndex() -> Int {
-        if let wolfIndex = game.blackList.first {
-            return wolfIndex
+    override func getLynchVoteIndex() -> Int? {
+        let unknownGoodList = game.activeList
+            .subtracting(game.whiteList)
+            .subtracting(game.wolfList)
+
+        if unknownGoodList.count > 0 {
+            if let wolfIndex = game.blackList.first {
+                return wolfIndex
+            } else {
+                return unknownGoodList.first
+            }
         } else {
-            let index = game.activeList
-                .subtracting(game.whiteList)
-                .subtracting(game.wolfList)
-                .subtracting([player.position])
-                .randomElement()!
-            return index
+            return getKillVoteIndex()
         }
     }
 
@@ -27,17 +30,16 @@ class Werewolf: Role, Wolf {
 
     func killVote() {
         let index = getKillVoteIndex()
-        game.playerGetKillVoted(index)
-        logger.info("Player \(index) get a kill voted")
+        game.playerGetKillVoted(index, from: player.position)
     }
 
     func getKillVoteIndex() -> Int {
-        if game.claimedSpecialList.count == 0{
+        if game.claimedSpecialList.count == 0 {
             let index = game.activeList
                 .subtracting(game.wolfList)
                 .randomElement()!
             return index
-        }else{
+        } else {
             let index = game.claimedSpecialKillIndexes.first!
             return index
         }

@@ -18,6 +18,7 @@ class Game {
         for player in players {
             player.reset()
         }
+        revote = false
     }
 
     func play() {
@@ -36,7 +37,7 @@ class Game {
             }
         }
         if gameOver {
-            if activeNumber == 0 {
+            if activeCitizenNumber == 0 {
                 result = -1
             } else if activeWolfNumber == 0 {
                 result = 1

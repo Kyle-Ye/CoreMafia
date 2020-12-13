@@ -19,7 +19,7 @@ extension Game {
 
     func lynchEvent() {
         if let lynchPlayer = players.max(by: { (p1, p2) -> Bool in
-            p1.lynchVotes < p2.lynchVotes
+            p1.validLynchVotes < p2.validLynchVotes
         }) {
             let lynchIndex = lynchPlayer.position
             logger.info("Player \(lynchIndex) will be lynched")
@@ -63,9 +63,8 @@ extension Game {
                     revote = false
                     logger.info("Player \(lynchIndex) is lynched")
                 } else {
-                    // TODO: Idiot lynched situation
                     revote = true
-                    logger.info("Unknown situation")
+                    logger.error("Unknown situation")
                 }
             }
         }
@@ -82,14 +81,23 @@ extension Game {
                     seer.detect()
                 case let savior as Savior:
                     savior.protect()
-                case let werewolf as Werewolf:
-                    werewolf.killVote()
+                case let wolf as Wolf:
+                    wolf.killVote()
                 default:
                     break
                 }
             }
         }
         killEvent()
+        for player in players {
+            if player.isActive {
+                let role = player.role
+                switch role {
+                default:
+                    break
+                }
+            }
+        }
     }
 
     func killEvent() {
