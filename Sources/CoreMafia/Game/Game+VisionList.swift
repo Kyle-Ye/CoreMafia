@@ -90,7 +90,7 @@ extension Game {
     // MARK: - Witch's Vision
 
     public var witchWhiteList: Set<Int> {
-        Set(activeIndexes.indices.filter { index -> Bool in
+        Set(activeIndexes.filter { index -> Bool in
             let player = players[index]
             return player.trustedByWitch
         })
@@ -99,7 +99,7 @@ extension Game {
     // MARK: - Wolf's Vision
 
     public var wolfList: Set<Int> {
-        Set(activeIndexes.indices.filter { index -> Bool in
+        Set(activeIndexes.filter { index -> Bool in
             let player = players[index]
             return player.role is Wolf
         })

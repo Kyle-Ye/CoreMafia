@@ -25,6 +25,7 @@ public class Player {
 
     @Published public var protected = false
     @Published public var cursed = false
+    @Published public var antidoted = false
     @Published public var lynchVotes = 0
     @Published public var killVotes = 0
 
@@ -74,6 +75,14 @@ public class Player {
     }
 
     func getShot() {
+        active = false
+    }
+    
+    func getAntidoted(){
+        protected = true
+    }
+    
+    func getPoisoned(){
         active = false
     }
 }

@@ -14,12 +14,9 @@ class Game {
     @Published var time = TimeLine()
     @Published private(set) var result = 0
     var revote = false
-    private func resetState() {
-        for player in players {
-            player.reset()
-        }
-        revote = false
-    }
+    var tiedRevote = false
+    var killResult: (index: Int, success: Bool)?
+    var lynchResult: (index: Int, success: Bool)? 
 
     func play() {
         if !gameOver {
@@ -27,12 +24,8 @@ class Game {
             logger.next()
             switch time.time {
             case .day:
-                repeat {
-                    resetState()
-                    dayEvent()
-                } while revote
+                dayEvent()
             case .night:
-                resetState()
                 nightEvent()
             }
         }
@@ -52,6 +45,7 @@ class Game {
     var seerIndex: Int?
     var witchIndex: Int?
     var saviorIndex: Int?
+    var crowIndex: Int?
 
     func addPlayer(with role: Role) {
         switch role {
@@ -61,6 +55,8 @@ class Game {
             witchIndex = players.count
         case is Savior:
             saviorIndex = players.count
+        case is Crow:
+            crowIndex = players.count
         default:
             break
         }
