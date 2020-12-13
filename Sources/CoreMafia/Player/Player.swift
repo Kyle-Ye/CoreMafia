@@ -101,6 +101,6 @@ extension Player {
 
 extension Player: CustomStringConvertible {
     public var description: String {
-        "Player\(position)(\(role))"
+        "Player \(position)(\(role))"
     }
 }

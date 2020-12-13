@@ -85,35 +85,35 @@ extension Game {
     }
 
     private func WillLynchEvent(_ lynchIndex: Int) {
-        logger.info("Player \(lynchIndex) will be lynched")
+        logger.info("\(players[lynchIndex]) will be lynched")
         let lynchPlayer = players[lynchIndex]
         if !lynchPlayer.claimed {
             switch lynchPlayer.role {
             case let special as SpecialRole:
                 special.show()
                 revote = true
-                logger.info("Player \(lynchIndex) claims \(special), Revote")
+                logger.info("\(players[lynchIndex]) claims \(special), Revote")
             case is Citizen:
                 if seerWhiteList.contains(lynchIndex) {
                     if let seerIndex = seerIndex, players[seerIndex].isActive {
                         lynchPlayer.claimed = true
                         (players[seerIndex].role as! Seer).show()
                         revote = true
-                        logger.info("Seer claims Citizen, Revote")
+                        logger.info("Seer claims \(players[lynchIndex]), Revote")
                     }
                 } else if saviorWhiteList.contains(lynchIndex) {
                     if let saviorIndex = saviorIndex, players[saviorIndex].isActive {
                         lynchPlayer.claimed = true
                         (players[saviorIndex].role as! Savior).show()
                         revote = true
-                        logger.info("Savior claims Citizen, Revote")
+                        logger.info("Savior claims \(players[lynchIndex]), Revote")
                     }
                 } else if witchWhiteList.contains(lynchIndex) {
                     if let witchIndex = witchIndex, players[witchIndex].isActive {
                         lynchPlayer.claimed = true
                         (players[witchIndex].role as! Witch).show()
                         revote = true
-                        logger.info("Witch claims Citizen, Revote")
+                        logger.info("Witch claims \(players[lynchIndex]), Revote")
                     }
                 }
             default: break
@@ -125,7 +125,7 @@ extension Game {
         let success = players[lynchIndex].getLynched()
         if success {
             revote = false
-            logger.info("Player \(lynchIndex) is lynched")
+            logger.info("\(players[lynchIndex]) is lynched")
         } else {
             revote = true
             logger.error("Unknown situation")
@@ -160,7 +160,7 @@ extension Game {
     }
 
     private func willKillEvent(_ killIndex: Int) {
-        logger.info("Player \(killIndex) will be killed")
+        logger.info("\(players[killIndex]) will be killed")
         if let witchIndex = witchIndex, players[witchIndex].isActive {
             let witch = players[witchIndex].role as! Witch
             witch.antidoteEvent(killIndex: killIndex)
@@ -170,7 +170,7 @@ extension Game {
     private func DidKillEvent(_ killIndex: Int) {
         let success = players[killIndex].getKilled()
         if success {
-            logger.info("Player \(killIndex) is killed")
+            logger.info("\(players[killIndex]) is killed")
         }
         killResult = (killIndex, success)
     }

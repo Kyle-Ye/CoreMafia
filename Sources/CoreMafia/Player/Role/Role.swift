@@ -10,7 +10,6 @@ import Foundation
 // MARK: - Role
 
 public class Role {
-    let type = AIType.strong
     unowned let game: Game
     unowned var player: Player!
 
