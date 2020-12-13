@@ -1,0 +1,28 @@
+{
+  "configurations" : [
+    {
+      "id" : "3A02194B-8D4E-4624-BCE7-30A1C84FA6DA",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "skippedTests" : [
+        "CoreMafiaTests\/testNormal()",
+        "CoreMafiaTests\/testPerformanceExample()"
+      ],
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "CoreMafiaTests",
+        "name" : "CoreMafiaTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -81,6 +81,8 @@ extension Game {
                     seer.detect()
                 case let savior as Savior:
                     savior.protect()
+                case let crow as Crow:
+                    crow.curse()
                 case let wolf as Wolf:
                     wolf.killVote()
                 default:

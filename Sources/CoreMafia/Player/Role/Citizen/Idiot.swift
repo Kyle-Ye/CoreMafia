@@ -14,7 +14,7 @@ class Idiot: Villager {
         if !lynched {
             super.lynchVote()
         } else {
-            logger.info("\(player!) is a lynched idiot, can't lynch vote")
+            game.logger.info("\(player!) is a lynched idiot, can't lynch vote")
         }
     }
 }

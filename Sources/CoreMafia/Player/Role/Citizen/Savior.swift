@@ -37,12 +37,13 @@ class Savior: Villager {
             return player.position
         } else {
             let claimedSpecialList = game.claimedSpecialList.subtracting([player.position])
-            let claimedSpecialIndexes = claimedSpecialList.sorted { (index1, index2) -> Bool in
-                let role1 = game.players[index1].role as! SpecialRole
-                let role2 = game.players[index2].role as! SpecialRole
-                return role1.protectPriority < role2.protectPriority
-            }
-            if let index = claimedSpecialIndexes.first {
+            if claimedSpecialList.count > 0 {
+                let claimedSpecialIndexes = claimedSpecialList.sorted { (index1, index2) -> Bool in
+                    let role1 = game.players[index1].role as! SpecialRole
+                    let role2 = game.players[index2].role as! SpecialRole
+                    return role1.protectPriority < role2.protectPriority
+                }
+                let index = claimedSpecialIndexes.first
                 return index
             } else if let index = game.whiteList
                 .union(game.saviorWhiteList)

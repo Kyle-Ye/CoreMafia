@@ -49,8 +49,4 @@ extension Role {
             .randomElement()
         return index
     }
-
-    var logger: LogHistory {
-        game.logger
-    }
 }
