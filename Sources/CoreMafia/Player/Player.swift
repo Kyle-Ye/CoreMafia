@@ -8,9 +8,8 @@
 import Foundation
 
 public class Player {
-    // TODO: - remove id?
     public let id = UUID()
-    public let role: Role
+    public var role: Role
     public let position: Int
     private var active = true
     public var isDead: Bool { !active }

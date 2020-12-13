@@ -35,4 +35,11 @@ extension Game {
         }
         return nil
     }
+    
+    var secret: FakeVillager? {
+        if let secretIndex = secretIndex, players[secretIndex].isActive {
+            return players[secretIndex].role as? FakeVillager
+        }
+        return nil
+    }
 }

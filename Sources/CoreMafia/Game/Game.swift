@@ -16,7 +16,7 @@ class Game {
     var revote = false
     var tiedRevote = false
     var killResult: (index: Int, success: Bool)?
-    var lynchResult: (index: Int, success: Bool)? 
+    var lynchResult: (index: Int, success: Bool)?
 
     func play() {
         if !gameOver {
@@ -33,7 +33,11 @@ class Game {
             if activeCitizenNumber == 0 {
                 result = -1
             } else if activeWolfNumber == 0 {
-                result = 1
+                if let mask = secret {
+                    mask.revert()
+                } else {
+                    result = 1
+                }
             }
         }
     }
@@ -46,6 +50,7 @@ class Game {
     var witchIndex: Int?
     var saviorIndex: Int?
     var crowIndex: Int?
+    var secretIndex: Int?
 
     func addPlayer(with role: Role) {
         switch role {
@@ -57,6 +62,8 @@ class Game {
             saviorIndex = players.count
         case is Crow:
             crowIndex = players.count
+        case is FakeVillager:
+            secretIndex = players.count
         default:
             break
         }
