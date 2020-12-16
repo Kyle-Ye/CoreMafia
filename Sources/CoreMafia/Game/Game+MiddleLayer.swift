@@ -11,9 +11,9 @@ extension Game {
     func playerGetProtected(_ index: Int?, from sourceIndex: Int) {
         if let index = index {
             players[index].protected = true
-            logger.info("\(players[index]) got protected by \(players[sourceIndex])")
+            logger.info("\n\(players[index]) got protected by \(players[sourceIndex])")
         } else {
-            logger.info("\(players[sourceIndex]) chose not to protect")
+            logger.info("\n\(players[sourceIndex]) chose not to protect")
         }
     }
 
@@ -38,18 +38,18 @@ extension Game {
     func playerGetDetected(_ index: Int?, from sourceIndex: Int) {
         if let index = index {
             players[index].detected = true
-            logger.info("\(players[index]) got detected by \(players[sourceIndex])")
+            logger.info("\n\(players[index]) got detected by \(players[sourceIndex])")
         } else {
-            logger.info("\(players[sourceIndex]) chose not to detect")
+            logger.info("\n\(players[sourceIndex]) chose not to detect")
         }
     }
 
     func playerGetCursed(_ index: Int?, from sourceIndex: Int) {
         if let index = index {
             players[index].cursed = true
-            logger.info("\(players[index]) got cursed by \(players[sourceIndex])")
+            logger.info("\n\(players[index]) got cursed by \(players[sourceIndex])")
         } else {
-            logger.info("\(players[sourceIndex]) chose not to curse")
+            logger.info("\n\(players[sourceIndex]) chose not to curse")
         }
     }
 
@@ -74,9 +74,9 @@ extension Game {
     func playerGetPoisoned(_ index: Int?, from sourceIndex: Int){
         if let index = index {
             players[index].getPoisoned()
-            logger.info("\(players[index]) got poisoned by \(players[sourceIndex])")
+            logger.info("\n\(players[index]) got poisoned by \(players[sourceIndex])")
         } else {
-            logger.info("\(players[sourceIndex]) chose not to use poison")
+            logger.info("\n\(players[sourceIndex]) chose not to use poison")
         }
     }
 }

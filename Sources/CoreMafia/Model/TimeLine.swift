@@ -25,3 +25,9 @@ public struct TimeLine {
         }
     }
 }
+
+extension TimeLine: CustomStringConvertible{
+    public var description: String {
+        "Day \(round) \(time)"
+    }
+}
