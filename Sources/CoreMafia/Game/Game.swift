@@ -45,8 +45,10 @@ class Game {
     // MARK: - Init Game
 
     private(set) var players: [Player] = []
-    private(set) var wolfNumber = 0
+    private(set) var initWolfNumber = 0
+    private(set) var initSpecialNumber = 0
     var publiclyLynchedWolfNumber = 0
+    var publiclyClaimedSpecialNumber = 0
     var seerIndex: Int?
     var witchIndex: Int?
     var saviorIndex: Int?
@@ -57,16 +59,22 @@ class Game {
         switch role {
         case is Seer:
             seerIndex = players.count
+            initSpecialNumber += 1
         case is Witch:
             witchIndex = players.count
+            initSpecialNumber += 1
         case is Savior:
             saviorIndex = players.count
+            initSpecialNumber += 1
         case is Crow:
             crowIndex = players.count
+            initSpecialNumber += 1
+        case is Hunter:
+            initSpecialNumber += 1
         case is FakeVillager:
             secretIndex = players.count
         case is Wolf:
-            wolfNumber += 1
+            initWolfNumber += 1
         default:
             break
         }

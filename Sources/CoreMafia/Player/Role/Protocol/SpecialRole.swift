@@ -17,8 +17,9 @@ extension SpecialRole where Self: Role {
     func show() {
         if let player = player {
             if !player.claimed {
-                player.claimed = true
                 game.logger.info("\(player) claimed to be \(self)")
+                player.claimed = true
+                game.publiclyClaimedSpecialNumber += 1
             }
         }
     }

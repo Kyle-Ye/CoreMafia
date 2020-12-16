@@ -18,11 +18,19 @@ class Hunter: Villager {
     private func getShootIndex() -> Int? {
         if let wolfIndex = game.blackList.first {
             return wolfIndex
-        } else if game.claimedSpecialList.count == 0 {
-            let index = game.activeList
+        } else if game.initSpecialNumber == game.publiclyClaimedSpecialNumber + (player.claimed ? 0 : 1) {
+            let list = game.activeList
+                .subtracting(game.claimedSpecialList)
+            if let index = list
                 .subtracting(game.whiteList)
-                .randomElement()
-            return index
+                .randomElement() {
+                return index
+            } else if let index = list
+                .randomElement() {
+                return index
+            } else {
+                return nil
+            }
         } else {
             return nil
         }

@@ -78,7 +78,7 @@ class Witch: Villager {
         let list = game.activeList
             .subtracting(game.whiteList)
             .subtracting(game.witchWhiteList)
-        if Double(game.wolfNumber - game.publiclyLynchedWolfNumber) / Double(list.count) >= 0.6 {
+        if Double(game.initWolfNumber - game.publiclyLynchedWolfNumber) / Double(list.count) >= 0.6 {
             if let wolfIndex = game.blackList.randomElement() {
                 return wolfIndex
             }
