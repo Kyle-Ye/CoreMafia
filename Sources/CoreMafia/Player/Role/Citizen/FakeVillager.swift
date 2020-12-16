@@ -13,7 +13,7 @@ class FakeVillager: Villager {
         self.original = original
         super.init(game)
     }
-    
+
     func revert() {
         original.player = player
         player.role = original

@@ -37,12 +37,12 @@ class Werewolf: Role, Wolf {
         if game.claimedSpecialList.count == 0 {
             var list = game.activeList
                 .subtracting(game.wolfList)
-            if let secret = game.secretIndex{
+            if let secret = game.secretIndex {
                 list = list.subtracting([secret])
             }
-            if let index = list.randomElement(){
+            if let index = list.randomElement() {
                 return index
-            }else{
+            } else {
                 return game.secretIndex!
             }
         } else {

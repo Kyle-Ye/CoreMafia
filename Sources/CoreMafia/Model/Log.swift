@@ -6,10 +6,6 @@
 //
 
 import Foundation
-import os
-
-// TODO: - ADD if to decide whether using Logger or LogHistory API
-// let logger = Logger()
 
 public class LogHistory {
     private var histories: [[String]] = [[]]

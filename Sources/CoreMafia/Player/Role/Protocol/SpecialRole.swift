@@ -15,8 +15,8 @@ protocol SpecialRole {
 
 extension SpecialRole where Self: Role {
     func show() {
-        if let player = player{
-            if !player.claimed{
+        if let player = player {
+            if !player.claimed {
                 player.claimed = true
                 game.logger.info("\(player) claimed to be \(self)")
             }

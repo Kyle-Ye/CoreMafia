@@ -9,7 +9,7 @@ import Foundation
 
 class Seer: Villager {
     var seerPubliclyLynchedWolfNumber = 0
-    
+
     // MARK: - Day Event
 
     override func getLynchVoteIndex() -> Int? {
@@ -45,13 +45,14 @@ class Seer: Villager {
 
 extension Seer: SpecialRole {
     func show() {
-        if let player = player{
-            if !player.claimed{
+        if let player = player {
+            if !player.claimed {
                 game.publiclyLynchedWolfNumber += seerPubliclyLynchedWolfNumber
                 player.claimed = true
             }
         }
     }
+
     var protectPriority: Int {
         5
     }

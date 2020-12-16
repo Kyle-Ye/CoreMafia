@@ -96,8 +96,8 @@ public class WerewolfGame {
     private var secretwolfNumber = 0
 
     public init(werewolf: Int, villager: Int, seer: Int = 1,
-                 witch: Int = 0, savior: Int = 0, hunter: Int = 0,
-                 crow: Int = 0, idiot: Int = 0, secretwolf: Int = 0) {
+                witch: Int = 0, savior: Int = 0, hunter: Int = 0,
+                crow: Int = 0, idiot: Int = 0, secretwolf: Int = 0) {
         werewolfNumber = werewolf
         villagerNumber = villager
         seerNumber = seer
@@ -136,14 +136,14 @@ public class WerewolfGame {
         for _ in 0 ..< idiotNumber {
             roles.append(Idiot(game))
         }
-        for _ in 0 ..< secretwolfNumber{
+        for _ in 0 ..< secretwolfNumber {
             roles.append(Secretwolf(game))
         }
         roles.shuffle()
         for role in roles {
-            if let secret = role as? Secretwolf{
+            if let secret = role as? Secretwolf {
                 game.addPlayer(with: secret.mask())
-            }else{
+            } else {
                 game.addPlayer(with: role)
             }
         }

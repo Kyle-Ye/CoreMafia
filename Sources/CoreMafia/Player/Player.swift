@@ -76,12 +76,12 @@ public class Player {
     func getShot() {
         active = false
     }
-    
-    func getAntidoted(){
+
+    func getAntidoted() {
         protected = true
     }
-    
-    func getPoisoned(){
+
+    func getPoisoned() {
         active = false
     }
 }

@@ -61,8 +61,8 @@ extension Game {
             logger.info("\(players[sourceIndex]) chose not to shoot")
         }
     }
-    
-    func playerGetAntidoted(_ index: Int?, from sourceIndex: Int){
+
+    func playerGetAntidoted(_ index: Int?, from sourceIndex: Int) {
         if let index = index {
             players[index].getAntidoted()
             logger.info("\(players[index]) got antidoted by \(players[sourceIndex])")
@@ -70,8 +70,8 @@ extension Game {
             logger.info("\(players[sourceIndex]) chose not to use antidote")
         }
     }
-    
-    func playerGetPoisoned(_ index: Int?, from sourceIndex: Int){
+
+    func playerGetPoisoned(_ index: Int?, from sourceIndex: Int) {
         if let index = index {
             players[index].getPoisoned()
             logger.info("\n\(players[index]) got poisoned by \(players[sourceIndex])")

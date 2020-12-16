@@ -8,7 +8,7 @@
 import Foundation
 
 public struct TimeLine {
-    public enum Time:String {
+    public enum Time: String {
         case day, night
     }
 
@@ -26,7 +26,7 @@ public struct TimeLine {
     }
 }
 
-extension TimeLine: CustomStringConvertible{
+extension TimeLine: CustomStringConvertible {
     public var description: String {
         "Day \(round) \(time)"
     }

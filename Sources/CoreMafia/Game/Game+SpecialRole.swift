@@ -21,21 +21,21 @@ extension Game {
         }
         return nil
     }
-    
+
     var activeSavior: Savior? {
         if let saviorIndex = saviorIndex, players[saviorIndex].isActive {
             return players[saviorIndex].role as? Savior
         }
         return nil
     }
-    
+
     var activeCrow: Crow? {
         if let crowIndex = crowIndex, players[crowIndex].isActive {
             return players[crowIndex].role as? Crow
         }
         return nil
     }
-    
+
     var activeSecret: FakeVillager? {
         if let secretIndex = secretIndex, players[secretIndex].isActive {
             return players[secretIndex].role as? FakeVillager

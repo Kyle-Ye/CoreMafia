@@ -36,7 +36,7 @@ extension Game {
                 }
             }
             lynchEvent()
-            if revote{
+            if revote {
                 logger.info("Revote!\n")
             }
         } while revote
@@ -56,7 +56,7 @@ extension Game {
                 wolf.killVote()
             }
             killEvent()
-            if revote{
+            if revote {
                 logger.info("Revote!\n")
             }
         } while revote
@@ -100,31 +100,27 @@ extension Game {
         logger.info("\(players[lynchIndex]) will be lynched")
         let lynchPlayer = players[lynchIndex]
         if !lynchPlayer.claimed {
-            switch lynchPlayer.role {
-            case let special as SpecialRole:
+            if seerWhiteList.contains(lynchIndex) {
+                if let seer = activeSeer {
+                    seer.show()
+                    revote = true
+                    logger.info("\(seer.player!) claimed \(players[lynchIndex]) to be citizen")
+                }
+            } else if saviorWhiteList.contains(lynchIndex) {
+                if let savior = activeSavior {
+                    savior.show()
+                    revote = true
+                    logger.info("\(savior.player!) claimed \(players[lynchIndex]) to be citizen")
+                }
+            } else if witchWhiteList.contains(lynchIndex) {
+                if let witch = activeWitch {
+                    witch.show()
+                    revote = true
+                    logger.info("\(witch.player!) claimed \(players[lynchIndex]) to be citizen")
+                }
+            } else if let special = lynchPlayer.role as? SpecialRole {
                 special.show()
                 revote = true
-            case is Citizen:
-                if seerWhiteList.contains(lynchIndex) {
-                    if let seer = activeSeer {
-                        seer.show()
-                        revote = true
-                        logger.info("\(seer.player!) claimed \(players[lynchIndex]) to be citizen")
-                    }
-                } else if saviorWhiteList.contains(lynchIndex) {
-                    if let savior = activeSavior {
-                        savior.show()
-                        revote = true
-                        logger.info("\(savior.player!) claimed \(players[lynchIndex]) to be citizen")
-                    }
-                } else if witchWhiteList.contains(lynchIndex) {
-                    if let witch = activeWitch {
-                        witch.show()
-                        revote = true
-                        logger.info("\(witch.player!) claimed \(players[lynchIndex]) to be citizen")
-                    }
-                }
-            default: break
             }
         }
     }
@@ -134,10 +130,10 @@ extension Game {
         if success {
             revote = false
             logger.info("\(players[lynchIndex]) was lynched")
-            if blackList.contains(lynchIndex){
+            if blackList.contains(lynchIndex) {
                 publiclyLynchedWolfNumber += 1
-            }else if seerBlackList.contains(lynchIndex){
-                if let seer = activeSeer{
+            } else if seerBlackList.contains(lynchIndex) {
+                if let seer = activeSeer {
                     seer.seerPubliclyLynchedWolfNumber += 1
                 }
             }
