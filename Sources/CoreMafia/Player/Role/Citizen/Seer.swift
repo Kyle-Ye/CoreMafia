@@ -15,13 +15,19 @@ class Seer: Villager {
     override func getLynchVoteIndex() -> Int? {
         if let wolfIndex = game.blackList.first {
             return wolfIndex
-        } else {
-            let index = game.activeList
-                .subtracting(game.whiteList)
-                .subtracting(game.seerWhiteList)
-                .subtracting([player.position])
-                .randomElement()
+        } else if let index = game.activeList
+            .subtracting(game.whiteList)
+            .subtracting(game.seerWhiteList)
+            .subtracting([player.position])
+            .randomElement() {
             return index
+        } else if let index = game.activeList
+            .subtracting(game.claimedSpecialList)
+            .subtracting([player.position])
+            .randomElement() {
+            return index
+        } else {
+            return nil
         }
     }
 

@@ -18,10 +18,13 @@ class Villager: Role {
             .subtracting([player.position])
             .randomElement() {
             return index
+        } else if let index = game.activeList
+            .subtracting(game.claimedSpecialList)
+            .subtracting([player.position])
+            .randomElement() {
+            return index
         } else {
-            return game.activeList
-                .subtracting([player.position])
-                .randomElement()
+            return nil
         }
     }
 
