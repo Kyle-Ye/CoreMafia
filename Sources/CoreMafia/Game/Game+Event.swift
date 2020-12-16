@@ -19,9 +19,10 @@ extension Game {
         if let killResult = killResult, !killResult.success {
             logger.info("Last night was a peaceful night, no one got killed")
             let killPlayer = players[killResult.index]
-            if let witch = witch, witch.help {
+            if let witch = activeWitch, witch.help {
                 witch.show()
                 killPlayer.trustedByWitch = true
+                witch.help = false
             } else {
                 killPlayer.trustedBySavior = true
             }
@@ -41,8 +42,8 @@ extension Game {
     // MARK: - Night Event
 
     func nightEvent() {
-        savior?.protect()
-        crow?.curse()
+        activeSavior?.protect()
+        activeCrow?.curse()
         repeat {
             resetState()
             for wolfIndex in wolfList {
@@ -51,8 +52,8 @@ extension Game {
             }
             killEvent()
         } while revote
-        seer?.detect()
-        witch?.poisonEvent()
+        activeSeer?.detect()
+        activeWitch?.poisonEvent()
     }
 
     // MARK: - LynchEvent
@@ -95,23 +96,23 @@ extension Game {
                 logger.info("\(players[lynchIndex]) claims \(special), Revote")
             case is Citizen:
                 if seerWhiteList.contains(lynchIndex) {
-                    if let seerIndex = seerIndex, players[seerIndex].isActive {
+                    if let seer = activeSeer {
                         lynchPlayer.claimed = true
-                        (players[seerIndex].role as! Seer).show()
+                        seer.show()
                         revote = true
                         logger.info("Seer claims \(players[lynchIndex]), Revote")
                     }
                 } else if saviorWhiteList.contains(lynchIndex) {
-                    if let saviorIndex = saviorIndex, players[saviorIndex].isActive {
+                    if let savior = activeSavior {
                         lynchPlayer.claimed = true
-                        (players[saviorIndex].role as! Savior).show()
+                        savior.show()
                         revote = true
                         logger.info("Savior claims \(players[lynchIndex]), Revote")
                     }
                 } else if witchWhiteList.contains(lynchIndex) {
-                    if let witchIndex = witchIndex, players[witchIndex].isActive {
+                    if let witch = activeWitch {
                         lynchPlayer.claimed = true
-                        (players[witchIndex].role as! Witch).show()
+                        witch.show()
                         revote = true
                         logger.info("Witch claims \(players[lynchIndex]), Revote")
                     }
@@ -126,6 +127,13 @@ extension Game {
         if success {
             revote = false
             logger.info("\(players[lynchIndex]) is lynched")
+            if blackList.contains(lynchIndex){
+                publiclyLynchedWolfNumber += 1
+            }else if seerBlackList.contains(lynchIndex){
+                if let seer = activeSeer{
+                    seer.seerPubliclyLynchedWolfNumber += 1
+                }
+            }
         } else {
             revote = true
             logger.error("Unknown situation")
@@ -161,8 +169,7 @@ extension Game {
 
     private func willKillEvent(_ killIndex: Int) {
         logger.info("\(players[killIndex]) will be killed")
-        if let witchIndex = witchIndex, players[witchIndex].isActive {
-            let witch = players[witchIndex].role as! Witch
+        if let witch = activeWitch {
             witch.antidoteEvent(killIndex: killIndex)
         }
     }

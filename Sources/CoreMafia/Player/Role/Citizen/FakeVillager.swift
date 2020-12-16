@@ -15,7 +15,9 @@ class FakeVillager: Villager {
     }
     
     func revert() {
+        original.player = player
         player.role = original
         game.logger.info("\(player!) got reverted from \(self)")
+        player = nil
     }
 }

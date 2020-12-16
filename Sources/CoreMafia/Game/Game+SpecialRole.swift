@@ -8,35 +8,35 @@
 import Foundation
 
 extension Game {
-    var seer: Seer? {
+    var activeSeer: Seer? {
         if let seerIndex = seerIndex, players[seerIndex].isActive {
             return players[seerIndex].role as? Seer
         }
         return nil
     }
 
-    var witch: Witch? {
+    var activeWitch: Witch? {
         if let witchIndex = witchIndex, players[witchIndex].isActive {
             return players[witchIndex].role as? Witch
         }
         return nil
     }
     
-    var savior: Savior? {
+    var activeSavior: Savior? {
         if let saviorIndex = saviorIndex, players[saviorIndex].isActive {
             return players[saviorIndex].role as? Savior
         }
         return nil
     }
     
-    var crow: Crow? {
+    var activeCrow: Crow? {
         if let crowIndex = crowIndex, players[crowIndex].isActive {
             return players[crowIndex].role as? Crow
         }
         return nil
     }
     
-    var secret: FakeVillager? {
+    var activeSecret: FakeVillager? {
         if let secretIndex = secretIndex, players[secretIndex].isActive {
             return players[secretIndex].role as? FakeVillager
         }

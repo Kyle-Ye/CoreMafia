@@ -8,10 +8,6 @@
 import Foundation
 
 class Secretwolf: Werewolf {
-    override init(_ game: Game) {
-        super.init(game)
-    }
-
     func mask() -> Role {
         FakeVillager(game, self)
     }

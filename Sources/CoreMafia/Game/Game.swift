@@ -33,7 +33,7 @@ class Game {
             if activeCitizenNumber == 0 {
                 result = -1
             } else if activeWolfNumber == 0 {
-                if let mask = secret {
+                if let mask = activeSecret {
                     mask.revert()
                 } else {
                     result = 1
@@ -45,7 +45,8 @@ class Game {
     // MARK: - Init Game
 
     private(set) var players: [Player] = []
-
+    private(set) var wolfNumber = 0
+    var publiclyLynchedWolfNumber = 0
     var seerIndex: Int?
     var witchIndex: Int?
     var saviorIndex: Int?
@@ -64,6 +65,8 @@ class Game {
             crowIndex = players.count
         case is FakeVillager:
             secretIndex = players.count
+        case is Wolf:
+            wolfNumber += 1
         default:
             break
         }

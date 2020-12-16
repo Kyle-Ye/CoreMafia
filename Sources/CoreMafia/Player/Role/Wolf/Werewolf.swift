@@ -35,10 +35,16 @@ class Werewolf: Role, Wolf {
 
     func getKillVoteIndex() -> Int {
         if game.claimedSpecialList.count == 0 {
-            let index = game.activeList
+            var list = game.activeList
                 .subtracting(game.wolfList)
-                .randomElement()!
-            return index
+            if let secret = game.secretIndex{
+                list = list.subtracting([secret])
+            }
+            if let index = list.randomElement(){
+                return index
+            }else{
+                return game.secretIndex!
+            }
         } else {
             let index = game.claimedSpecialKillIndexes.first!
             return index
