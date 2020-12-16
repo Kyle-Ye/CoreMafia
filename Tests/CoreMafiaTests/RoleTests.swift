@@ -3,9 +3,9 @@ import XCTest
 
 final class RuleTests: XCTestCase {
     func testAllRoles() {
-        let game = WerewolfGame(werewolf: 7, villager: 3, seer: 1, witch: 1,
-                                savior: 1, hunter: 1, crow: 1, idiot: 1,
-                                secretwolf: 1)
+        let game = WerewolfGame(werewolf: 7, villager: 3, withSeer: true,
+                                withWitch: true, withSavior: true, withHunter: true,
+                                withCrow: true, withIdiot: true, withSecretwolf: true)
         testRoleHelper(game)
     }
 
@@ -15,37 +15,38 @@ final class RuleTests: XCTestCase {
     }
 
     func testSeer() {
-        let game = WerewolfGame(werewolf: 2, villager: 3, seer: 1)
+        let game = WerewolfGame(werewolf: 2, villager: 3, withSeer: true)
         testRoleHelper(game)
     }
 
     func testSavior() {
-        let game = WerewolfGame(werewolf: 2, villager: 3, seer: 1, witch: 1, savior: 1)
+        let game = WerewolfGame(werewolf: 2, villager: 3, withSeer: true,
+                                withWitch: true, withSavior: true)
         testRoleHelper(game)
     }
 
     func testWitch() {
-        let game = WerewolfGame(werewolf: 2, villager: 3, witch: 1)
+        let game = WerewolfGame(werewolf: 2, villager: 3, withWitch: true)
         testRoleHelper(game)
     }
 
     func testHunter() {
-        let game = WerewolfGame(werewolf: 2, villager: 3, hunter: 1)
+        let game = WerewolfGame(werewolf: 2, villager: 3, withHunter: true)
         testRoleHelper(game)
     }
 
     func testCrow() {
-        let game = WerewolfGame(werewolf: 2, villager: 3, crow: 1)
+        let game = WerewolfGame(werewolf: 2, villager: 3, withCrow: true)
         testRoleHelper(game)
     }
 
     func testIdiot() {
-        let game = WerewolfGame(werewolf: 2, villager: 3, idiot: 1)
+        let game = WerewolfGame(werewolf: 2, villager: 3, withIdiot: true)
         testRoleHelper(game)
     }
-    
-    func testSecretwolf(){
-        let game = WerewolfGame(werewolf: 1, villager: 3, secretwolf: 1)
+
+    func testSecretwolf() {
+        let game = WerewolfGame(werewolf: 1, villager: 3, withSecretwolf: true)
         testRoleHelper(game)
     }
 

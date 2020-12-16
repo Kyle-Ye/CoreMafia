@@ -13,25 +13,18 @@ public class WerewolfGame {
 
     /**
          Initializes a mafia game with the specific number of characters.
-
          - Parameters:
-             - N: The number of total players
-             - m: The number of mafias
-             - s: The number of seers
-             - d: The number of saviors
-
+             - werewolf: The number of werewolves
+             - villager: The number of villagers
          - Returns: A mafia game
      */
-//    public convenience init(_ N: Int, _ m: Int, _ s: Int, _ d: Int) {
-//        precondition(N >= m + s + d, "The total number of players must great or equal to the mafias and the special citizens")
-//        self.init(m: m, s: s, d: d, o: N - m - s - d)
-//    }
-
-    // MARK: - Combine SetUp
-
-    var anyCancellable: AnyCancellable?
-
-    @Published private var game = Game()
+    public convenience init(werewolf: Int, villager: Int, withSeer: Bool = false,
+                            withWitch: Bool = false, withSavior: Bool = false, withHunter: Bool = false,
+                            withCrow: Bool = false, withIdiot: Bool = false, withSecretwolf: Bool = false) {
+        self.init(werewolf: werewolf, villager: villager, seer: withSeer ? 1 : 0,
+                  witch: withWitch ? 1 : 0, savior: withSavior ? 1 : 0, hunter: withHunter ? 1 : 0,
+                  crow: withCrow ? 1 : 0, idiot: withIdiot ? 1 : 0, secretwolf: withSecretwolf ? 1 : 0)
+    }
 
     // MARK: - Game Play API
 
@@ -95,9 +88,9 @@ public class WerewolfGame {
     private var idiotNumber = 0
     private var secretwolfNumber = 0
 
-    public init(werewolf: Int, villager: Int, seer: Int = 1,
-                witch: Int = 0, savior: Int = 0, hunter: Int = 0,
-                crow: Int = 0, idiot: Int = 0, secretwolf: Int = 0) {
+    private init(werewolf: Int, villager: Int, seer: Int = 1,
+                 witch: Int = 0, savior: Int = 0, hunter: Int = 0,
+                 crow: Int = 0, idiot: Int = 0, secretwolf: Int = 0) {
         werewolfNumber = werewolf
         villagerNumber = villager
         seerNumber = seer
@@ -151,6 +144,12 @@ public class WerewolfGame {
             self?.objectWillChange.send()
         }
     }
+
+    // MARK: - Combine SetUp
+
+    private var anyCancellable: AnyCancellable?
+
+    @Published private var game = Game()
 }
 
 extension WerewolfGame: ObservableObject {
