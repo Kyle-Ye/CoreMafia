@@ -35,19 +35,32 @@ class Werewolf: Role, Wolf {
 
     func getKillVoteIndex() -> Int {
         if game.claimedSpecialList.count == 0 {
-            var list = game.activeList
-                .subtracting(game.wolfList)
-            if let secret = game.secretIndex {
-                list = list.subtracting([secret])
-            }
-            if let index = list.randomElement() {
-                return index
-            } else {
-                return game.secretIndex!
-            }
+            return getRandomKillVoteIndex()
         } else {
-            let index = game.claimedSpecialKillIndexes.first!
+            if game.rule.saviorRule == .otherCanSame {
+                if let savior = game.activeSavior, savior.player.claimed{
+                    return savior.player.position
+                }else if game.claimedSpecialList.count == 1 {
+                    return getRandomKillVoteIndex()
+                }else{
+                    return game.claimedSpecialList.randomElement()!
+                }
+            } else {
+                let index = game.claimedSpecialKillIndexes.first!
+                return index
+            }
+        }
+    }
+    private func getRandomKillVoteIndex()->Int{
+        var list = game.activeList
+            .subtracting(game.wolfList)
+        if let secret = game.secretIndex {
+            list = list.subtracting([secret])
+        }
+        if let index = list.randomElement() {
             return index
+        } else {
+            return game.secretIndex!
         }
     }
 }

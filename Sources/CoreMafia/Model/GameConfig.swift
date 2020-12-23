@@ -17,7 +17,6 @@ public class GameConfig: ObservableObject {
     @Published public var withWitch: Bool = false
     @Published public var withSavior: Bool = false
     @Published public var withSecretwolf: Bool = false
-    @Published public var round: Int = 1000
     public init() {
     }
 }
