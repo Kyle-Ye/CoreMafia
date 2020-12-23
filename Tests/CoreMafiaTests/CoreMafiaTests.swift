@@ -12,7 +12,7 @@ final class CoreMafiaTests: XCTestCase {
     }
 
     func testSuccess() {
-        let game = WerewolfGame(werewolf: 2, villager: 10, seer: 1)
+        let game = WerewolfGame(werewolf: 1, villager: 3, seer: 5)
         game.autoplay()
         print(game.resultString)
         XCTAssertTrue(game.result == 1)
@@ -26,8 +26,7 @@ final class CoreMafiaTests: XCTestCase {
     }
 
     func testNormal() {
-        testNormalHelper(wolf: 2, citizen: 3)
-        testNormalHelper(wolf: 4, citizen: 6)
+        testNormalHelper(wolf: 1, citizen: 5)
     }
 
     private func testNormalHelper(wolf: Int, citizen: Int,_ round:Int = 1000) {
@@ -57,7 +56,7 @@ final class CoreMafiaTests: XCTestCase {
 
     func testPerformanceExample() {
         measure {
-            testNormalHelper(wolf: 3, citizen: 6,2000)
+            testNormalHelper(wolf: 1, citizen: 5,2000)
         }
     }
 }

@@ -27,7 +27,7 @@ extension Game {
         }
         var witch: Set<Int> = []
         if let witchIndex = witchIndex, players[witchIndex].claimed {
-            witch = saviorWhiteList
+            witch = witchWhiteList
         }
         return claimed.union(seer).union(savior).union(witch)
     }

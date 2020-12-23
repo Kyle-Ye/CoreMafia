@@ -55,8 +55,10 @@ extension Seer: SpecialRole {
     func show() {
         if let player = player {
             if !player.claimed {
-                game.publiclyLynchedWolfNumber += Seer.seerPubliclyLynchedWolfNumber
+                game.logger.info("\(player) claimed to be \(self)")
                 player.claimed = true
+                game.publiclyClaimedSpecialNumber += 1
+                game.publiclyLynchedWolfNumber += Seer.seerPubliclyLynchedWolfNumber
             }
         }
     }
