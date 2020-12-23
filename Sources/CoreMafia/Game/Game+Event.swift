@@ -100,27 +100,29 @@ extension Game {
         logger.info("\(players[lynchIndex]) will be lynched")
         let lynchPlayer = players[lynchIndex]
         if !lynchPlayer.claimed {
-            if seerWhiteList.contains(lynchIndex) {
-                if let seer = activeSeer {
-                    seer.show()
-                    revote = true
-                    logger.info("\(seer.player!) claimed \(players[lynchIndex]) to be citizen")
-                }
-            } else if saviorWhiteList.contains(lynchIndex) {
-                if let savior = activeSavior {
-                    savior.show()
-                    revote = true
-                    logger.info("\(savior.player!) claimed \(players[lynchIndex]) to be citizen")
-                }
-            } else if witchWhiteList.contains(lynchIndex) {
-                if let witch = activeWitch {
-                    witch.show()
-                    revote = true
-                    logger.info("\(witch.player!) claimed \(players[lynchIndex]) to be citizen")
-                }
-            } else if let special = lynchPlayer.role as? SpecialRole {
+            if let special = lynchPlayer.role as? SpecialRole, rule.willSpecialClaim {
                 special.show()
                 revote = true
+            } else if seerWhiteList.contains(lynchIndex),
+                      rule.willSeerWhiteListClaim,
+                      let seer = activeSeer,
+                      seerWhiteList.count >= 3 ||
+                      (seerWhiteList.count >= 1 && seerBlackList.count >= 1) {
+                seer.show()
+                revote = true
+                logger.info("\(seer.player!) claimed \(players[lynchIndex]) to be citizen")
+            } else if saviorWhiteList.contains(lynchIndex),
+                      rule.willSaviorWhiteListClaim,
+                      let savior = activeSavior {
+                savior.show()
+                revote = true
+                logger.info("\(savior.player!) claimed \(players[lynchIndex]) to be citizen")
+            } else if witchWhiteList.contains(lynchIndex),
+                      rule.willWitchWhiteListClaim,
+                      let witch = activeWitch {
+                witch.show()
+                revote = true
+                logger.info("\(witch.player!) claimed \(players[lynchIndex]) to be citizen")
             }
         }
     }

@@ -8,6 +8,12 @@
 import Foundation
 
 class Witch: Villager {
+    override init(_ game: Game) {
+        antidote = game.rule.witchAntidote
+        poison = game.rule.witchPoison
+        super.init(game)
+    }
+    
     // MARK: - Day Event
 
     override func getLynchVoteIndex() -> Int? {

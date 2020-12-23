@@ -39,6 +39,15 @@ class Savior: Villager {
     private var lastProtectedIndex: Int?
 
     func getProtectIndex() -> Int? {
+        switch game.rule.saviorRule {
+        case .allNotSame:
+            return getProtectIndexForAllNotSame()
+        case .otherCanSame:
+            return getProtectIndexForOtherCanSame()
+        }
+    }
+    
+    func getProtectIndexForAllNotSame() -> Int?{
         if lastProtectedIndex != player.position {
             return player.position
         } else {
@@ -64,6 +73,30 @@ class Savior: Villager {
             } else {
                 return nil
             }
+        }
+    }
+    func getProtectIndexForOtherCanSame() -> Int?{
+        let claimedSpecialList = game.claimedSpecialList.subtracting([player.position])
+        if claimedSpecialList.count > 0 {
+            let claimedSpecialIndexes = claimedSpecialList.sorted { (index1, index2) -> Bool in
+                let role1 = game.players[index1].role as! SpecialRole
+                let role2 = game.players[index2].role as! SpecialRole
+                return role1.protectPriority < role2.protectPriority
+            }
+            let index = claimedSpecialIndexes.first
+            return index
+        } else if let index = game.whiteList
+            .union(game.saviorWhiteList)
+            .subtracting([player.position])
+            .randomElement() {
+            return index
+        } else if let index = game.activeList
+            .subtracting(game.blackList)
+            .subtracting([player.position])
+            .randomElement() {
+            return index
+        } else {
+            return nil
         }
     }
 }

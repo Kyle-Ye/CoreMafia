@@ -43,7 +43,10 @@ class Game {
     }
 
     // MARK: - Init Game
-
+    var rule:GameRule
+    init(rule:GameRule = GameRule()) {
+        self.rule = rule
+    }
     private(set) var players: [Player] = []
     private(set) var initWolfNumber = 0
     private(set) var initSpecialNumber = 0
