@@ -3,9 +3,9 @@ import XCTest
 
 final class RuleTests: XCTestCase {
     func testAllRoles() {
-        let game = WerewolfGame(werewolf: 7, villager: 3, withSeer: true,
-                                withWitch: true, withSavior: true, withHunter: true,
-                                withCrow: true, withIdiot: true, withSecretwolf: true)
+        let game = WerewolfGame(werewolf: 7, villager: 3, seer: 1,
+                                hunter: 1, crow: 1, idiot: 1,
+                                withWitch: true, withSavior: true, withSecretwolf: true)
         testRoleHelper(game)
     }
 
@@ -15,12 +15,12 @@ final class RuleTests: XCTestCase {
     }
 
     func testSeer() {
-        let game = WerewolfGame(werewolf: 2, villager: 3, withSeer: true)
+        let game = WerewolfGame(werewolf: 2, villager: 3, seer: 3)
         testRoleHelper(game)
     }
 
     func testSavior() {
-        let game = WerewolfGame(werewolf: 2, villager: 3, withSeer: true,
+        let game = WerewolfGame(werewolf: 2, villager: 3, seer: 1,
                                 withWitch: true, withSavior: true)
         testRoleHelper(game)
     }
@@ -31,17 +31,17 @@ final class RuleTests: XCTestCase {
     }
 
     func testHunter() {
-        let game = WerewolfGame(werewolf: 2, villager: 3, withHunter: true)
+        let game = WerewolfGame(werewolf: 2, villager: 3, hunter: 3)
         testRoleHelper(game)
     }
 
     func testCrow() {
-        let game = WerewolfGame(werewolf: 2, villager: 3, withCrow: true)
+        let game = WerewolfGame(werewolf: 2, villager: 3, crow: 3)
         testRoleHelper(game)
     }
 
     func testIdiot() {
-        let game = WerewolfGame(werewolf: 2, villager: 3, withIdiot: true)
+        let game = WerewolfGame(werewolf: 2, villager: 3, idiot: 3)
         testRoleHelper(game)
     }
 

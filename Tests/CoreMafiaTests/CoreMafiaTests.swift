@@ -3,16 +3,16 @@ import XCTest
 
 final class CoreMafiaTests: XCTestCase {
     func testExample() {
-        let game = WerewolfGame(werewolf: 6, villager: 5, withSeer: true,
-                                withWitch: true, withSavior: true, withHunter: true,
-                                withCrow: true, withIdiot: true)
+        let game = WerewolfGame(werewolf: 6, villager: 5, seer: 1,
+                                hunter: 1,crow: 1,idiot: 1,
+                                withWitch: true, withSavior: true)
         game.autoplay()
         print(game.resultString)
         XCTAssertTrue([1, -1].contains(game.result))
     }
 
     func testSuccess() {
-        let game = WerewolfGame(werewolf: 2, villager: 10, withSeer: true)
+        let game = WerewolfGame(werewolf: 2, villager: 10, seer: 1)
         game.autoplay()
         print(game.resultString)
         XCTAssertTrue(game.result == 1)
