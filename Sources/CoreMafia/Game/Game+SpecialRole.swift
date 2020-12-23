@@ -8,11 +8,14 @@
 import Foundation
 
 extension Game {
-    var activeSeer: Seer? {
-        if let seerIndex = seerIndex, players[seerIndex].isActive {
-            return players[seerIndex].role as? Seer
+    var activeSeers: [Seer] {
+        var seers:[Seer] = []
+        for seerIndex in seerIndexes{
+            if players[seerIndex].isActive,let seer = players[seerIndex].role as? Seer{
+                seers.append(seer)
+            }
         }
-        return nil
+        return seers
     }
 
     var activeWitch: Witch? {
@@ -29,11 +32,14 @@ extension Game {
         return nil
     }
 
-    var activeCrow: Crow? {
-        if let crowIndex = crowIndex, players[crowIndex].isActive {
-            return players[crowIndex].role as? Crow
+    var activeCrows: [Crow] {
+        var crows:[Crow] = []
+        for crowIndex in crowIndexes{
+            if players[crowIndex].isActive,let crow = players[crowIndex].role as? Crow{
+                crows.append(crow)
+            }
         }
-        return nil
+        return crows
     }
 
     var activeSecret: FakeVillager? {

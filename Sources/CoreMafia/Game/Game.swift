@@ -52,16 +52,18 @@ class Game {
     private(set) var initSpecialNumber = 0
     var publiclyLynchedWolfNumber = 0
     var publiclyClaimedSpecialNumber = 0
-    var seerIndex: Int?
+    
+    var seerIndexes: [Int] = []
+    var crowIndexes: [Int] = []
+
     var witchIndex: Int?
     var saviorIndex: Int?
-    var crowIndex: Int?
     var secretIndex: Int?
 
     func addPlayer(with role: Role) {
         switch role {
         case is Seer:
-            seerIndex = players.count
+            seerIndexes.append(players.count)
             initSpecialNumber += 1
         case is Witch:
             witchIndex = players.count
@@ -70,7 +72,7 @@ class Game {
             saviorIndex = players.count
             initSpecialNumber += 1
         case is Crow:
-            crowIndex = players.count
+            crowIndexes.append(players.count)
             initSpecialNumber += 1
         case is Hunter:
             initSpecialNumber += 1

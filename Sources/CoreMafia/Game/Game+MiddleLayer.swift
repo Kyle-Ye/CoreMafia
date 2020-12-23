@@ -37,7 +37,7 @@ extension Game {
 
     func playerGetDetected(_ index: Int?, from sourceIndex: Int) {
         if let index = index {
-            players[index].detected = true
+            players[index].detectedSeerList.append(sourceIndex)
             logger.info("\n\(players[index]) got detected by \(players[sourceIndex])")
         } else {
             logger.info("\n\(players[sourceIndex]) chose not to detect")
@@ -46,7 +46,7 @@ extension Game {
 
     func playerGetCursed(_ index: Int?, from sourceIndex: Int) {
         if let index = index {
-            players[index].cursed = true
+            players[index].curseVotes += 1
             logger.info("\(players[index]) got cursed by \(players[sourceIndex])\n")
         } else {
             logger.info("\(players[sourceIndex]) chose not to curse\n")

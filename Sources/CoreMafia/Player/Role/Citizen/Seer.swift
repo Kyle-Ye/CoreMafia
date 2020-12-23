@@ -8,7 +8,7 @@
 import Foundation
 
 class Seer: Villager {
-    var seerPubliclyLynchedWolfNumber = 0
+    static var seerPubliclyLynchedWolfNumber = 0
 
     // MARK: - Day Event
 
@@ -17,7 +17,7 @@ class Seer: Villager {
             return wolfIndex
         } else if let index = game.activeList
             .subtracting(game.whiteList)
-            .subtracting(game.seerWhiteList)
+            .subtracting(game.seerWhiteList(player.position))
             .subtracting([player.position])
             .randomElement() {
             return index
@@ -39,9 +39,11 @@ class Seer: Villager {
     }
 
     private func getDetectIndex() -> Int? {
-        if let index = game.unknownList.randomElement() {
+        if let index = game.unknownList
+            .subtracting(game.seerWhiteList(player.position))
+            .randomElement() {
             return index
-        } else if let index = game.undetectedList.randomElement() {
+        } else if let index = game.undetectedList(player.position).randomElement() {
             return index
         } else {
             return nil
@@ -53,7 +55,7 @@ extension Seer: SpecialRole {
     func show() {
         if let player = player {
             if !player.claimed {
-                game.publiclyLynchedWolfNumber += seerPubliclyLynchedWolfNumber
+                game.publiclyLynchedWolfNumber += Seer.seerPubliclyLynchedWolfNumber
                 player.claimed = true
             }
         }

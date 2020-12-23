@@ -16,8 +16,10 @@ extension Game {
             return player.claimed && player.role is Citizen
         })
         var seer: Set<Int> = []
-        if let seerIndex = seerIndex, players[seerIndex].claimed {
-            seer = seerWhiteList
+        for seerIndex in seerIndexes {
+            if players[seerIndex].claimed {
+                seer.formUnion(seerWhiteList(seerIndex))
+            }
         }
         var savior: Set<Int> = []
         if let saviorIndex = saviorIndex, players[saviorIndex].claimed {
@@ -31,11 +33,13 @@ extension Game {
     }
 
     public var blackList: Set<Int> {
-        if let seerIndex = seerIndex, players[seerIndex].claimed {
-            return seerBlackList
-        } else {
-            return []
+        var seer: Set<Int> = []
+        for seerIndex in seerIndexes {
+            if players[seerIndex].claimed {
+                seer.formUnion(seerBlackList(seerIndex))
+            }
         }
+        return seer
     }
 
     public var unknownList: Set<Int> {
@@ -57,24 +61,24 @@ extension Game {
 
     // MARK: - Seer's Vision
 
-    public var seerWhiteList: Set<Int> {
+    public func seerWhiteList(_ seerIndex: Int) -> Set<Int> {
         Set(activeIndexes.filter { index -> Bool in
             let player = players[index]
-            return player.detected && player.role is Citizen
+            return player.detectedSeerList.contains(seerIndex) && player.role is Citizen
         })
     }
 
-    public var seerBlackList: Set<Int> {
+    public func seerBlackList(_ seerIndex: Int) -> Set<Int> {
         Set(activeIndexes.filter { index -> Bool in
             let player = players[index]
-            return player.detected && player.role is Wolf
+            return player.detectedSeerList.contains(seerIndex) && player.role is Wolf
         })
     }
 
-    public var undetectedList: Set<Int> {
+    public func undetectedList(_ seerIndex: Int) -> Set<Int> {
         Set(activeIndexes.indices.filter { index -> Bool in
             let player = players[index]
-            return !player.detected
+            return !player.detectedSeerList.contains(seerIndex)
         })
     }
 

@@ -23,7 +23,7 @@ public class Player {
     // MARK: Votes
 
     @Published public var protected = false
-    @Published public var cursed = false
+    @Published public var curseVotes = 0
     @Published public var antidoted = false
     @Published public var lynchVotes = 0
     @Published public var killVotes = 0
@@ -33,13 +33,13 @@ public class Player {
         lynchVotes = 0
         killVotes = 0
         if role.game.time.time == .night {
-            cursed = false
+            curseVotes = 0
         }
     }
 
     // MARK: State
 
-    @Published public var detected = false
+    @Published public var detectedSeerList = [Int]()
     @Published public var claimed = false
     @Published public var trustedBySavior = false
     @Published public var trustedByWitch = false
@@ -95,7 +95,7 @@ extension Player: ObservableObject {}
 
 extension Player {
     var validLynchVotes: Int {
-        lynchVotes + (cursed ? 1 : 0)
+        lynchVotes + curseVotes
     }
 }
 
