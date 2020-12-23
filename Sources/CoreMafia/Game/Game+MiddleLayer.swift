@@ -11,9 +11,9 @@ extension Game {
     func playerGetProtected(_ index: Int?, from sourceIndex: Int) {
         if let index = index {
             players[index].protected = true
-            logger.info("\n\(players[index]) got protected by \(players[sourceIndex])")
+            logger.info("\(players[index]) got protected by \(players[sourceIndex])\n")
         } else {
-            logger.info("\n\(players[sourceIndex]) chose not to protect")
+            logger.info("\(players[sourceIndex]) chose not to protect\n")
         }
     }
 
@@ -47,9 +47,9 @@ extension Game {
     func playerGetCursed(_ index: Int?, from sourceIndex: Int) {
         if let index = index {
             players[index].cursed = true
-            logger.info("\n\(players[index]) got cursed by \(players[sourceIndex])")
+            logger.info("\(players[index]) got cursed by \(players[sourceIndex])\n")
         } else {
-            logger.info("\n\(players[sourceIndex]) chose not to curse")
+            logger.info("\(players[sourceIndex]) chose not to curse\n")
         }
     }
 

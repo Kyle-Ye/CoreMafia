@@ -38,7 +38,7 @@ class Witch: Villager {
     var help = false
 
     func antidoteEvent(killIndex: Int) {
-        if antidote > 1 && concoctedNumber < Witch.MAX_CONCOCT_NUMBER {
+        if antidote > 0 && concoctedNumber < Witch.MAX_CONCOCT_NUMBER {
             let antidoteIndex = getAntidoteIndex(killIndex: killIndex)
             game.playerGetAntidoted(antidoteIndex, from: player.position)
             if antidoteIndex != nil {
@@ -50,7 +50,7 @@ class Witch: Villager {
     }
 
     func poisonEvent() {
-        if poison > 1 && concoctedNumber < Witch.MAX_CONCOCT_NUMBER {
+        if poison > 0 && concoctedNumber < Witch.MAX_CONCOCT_NUMBER {
             let poisonIndex = getPoisonIndex()
             game.playerGetPoisoned(poisonIndex, from: player.position)
             if poisonIndex != nil {
